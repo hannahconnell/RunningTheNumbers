@@ -1,0 +1,158 @@
+---
+title: "Appendices"
+author: "Hannah Connell"
+output: html_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r packages, include = FALSE}
+# Load any packages you may need here
+library(car)
+library(ggplot2)
+library(gridExtra) # can use if you want to create side-by-side plots (like in Figure 5)
+```
+
+
+```{r readData, include = FALSE}
+combine <- read.csv("combine_defensive.csv", stringsAsFactors = TRUE)
+```
+
+
+***
+
+#### Figure 1: Summary Ouput - Initial Model
+
+```{r figure1, echo = FALSE}
+lm_combine_initial <- lm(fortyyd ~  heightinchestotal + weight + position + vertical, data = combine)
+summary(lm_combine_initial)
+```
+
+***
+
+#### Figure 2: Residuals Plot - Initial Model
+
+```{r figure2, echo = FALSE}
+plot(lm_combine_initial, which = 1)
+```
+
+***
+
+#### Figure 3: QQ Plot of Residuals - Initial Model
+
+```{r figure3, echo = FALSE}
+plot(lm_combine_initial, which = 2)
+```
+
+***
+
+#### Figure 4: Scatterplot of Forty Yard Dash Times by Weight 
+
+```{r figure4, echo = FALSE}
+ggplot(data = combine, aes(x = weight, y = fortyyd)) + 
+  
+  geom_point(aes(color = position, shape = position)) + 
+  
+  
+  labs(title = "Scatterplot of Forty Yard Dash Times vs Player Weight",
+       x = "Weight (in lbs)",
+       y = "Forty Yard Dash Time (in seconds)")
+```
+
+***
+
+#### Figure 5: An Updated Version of the Model With Position as an Interaction Variable for Weight
+
+```{r figure5, echo = FALSE}
+lm_combine_updated <- lm(fortyyd ~  heightinchestotal + weight * position + vertical, data = combine)
+summary(lm_combine_updated)
+```
+
+***
+
+#### Figure 6: Scatterplot Matrix Including Twenty Yard Shuttle
+
+```{r figure6, echo = FALSE}
+plot( ~ fortyyd + heightinchestotal + weight + vertical + twentyss, data = combine)
+```
+
+***
+
+#### Figure 7: Updated Model Including Twenty Yard Shuttle
+
+```{r figure7, echo = FALSE}
+lm_combine_updated2 <- lm(fortyyd ~  heightinchestotal + weight + position + vertical + twentyss, data = combine)
+summary(lm_combine_updated2)
+```
+
+***
+
+#### Figure 8: Scatterplot of Forty Yard Dash Times vs Twenty Yard Shuttle Times
+
+```{r figure8, echo = FALSE}
+ggplot(data = combine, aes(x = twentyss, y = fortyyd)) + 
+  
+  geom_point(aes(color = position, shape = position)) + 
+  
+  
+  labs(title = "Scatterplot of Forty Yard Dash Times vs Twenty Yard Shuttle Times",
+       x = "Twenty Yard Shuttle Time (in seconds)",
+       y = "Forty Yard Dash Time (in seconds)")
+```
+
+***
+
+#### Figure 9: Updated Model with an Interaction Between Twenty Yard Shuttle and Position
+
+```{r figure9, echo = FALSE}
+lm_combine_final <- lm(fortyyd ~  heightinchestotal + weight + vertical + twentyss * position, data = combine)
+summary(lm_combine_final)
+```
+
+***
+
+#### Figure 10: Final Model - CMF
+
+$E(Y_{fortyyd}|X) = \beta_0 + \beta_1 X_{heightinchestotal} + \beta_2 X_{weight} + \beta_3 X_{vertical} + \beta_4 X_{twentyss} + \beta_5 I_{positionDE} + \beta_6 I_{positionDT} + \beta_7 I_{positionOLB} + \beta_8 I_{positionDE}X_{twentyss} + \beta_9 I_{positionDT}X_{twentyss} + \beta_{10} I_{positionOLB}X_{twentyss}$
+
+***
+
+#### Figure 11: Residuals Plot - Final Model
+
+```{r figure11}
+
+plot(lm_combine_final, which = 1)
+
+```
+
+***
+
+#### Figure 12: QQ Plot of Residuals - Final Model
+
+```{r figure12}
+
+plot(lm_combine_final, which = 2)
+
+```
+
+***
+
+#### Figure 13: Summary of Forty Yard Dash Times
+
+
+```{r figure13, echo = FALSE}
+summary(combine$fortyyd)
+```
+
+***
+
+#### Figure 14: VIFs for Each Predictor 
+
+```{r figure14, echo = FALSE}
+vif(lm(fortyyd ~  heightinchestotal + weight + vertical + twentyss, data = combine))
+
+
+```
